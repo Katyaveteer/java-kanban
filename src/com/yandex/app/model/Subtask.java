@@ -1,4 +1,4 @@
-package Task;
+package com.yandex.app.model;
 
 public class Subtask extends Task {
     private int epicId;

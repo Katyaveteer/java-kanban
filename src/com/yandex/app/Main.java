@@ -1,7 +1,10 @@
-import Task.Epic;
-import Task.Subtask;
-import Task.Task;
-import Task.TaskStatus;
+package com.yandex.app;
+
+import com.yandex.app.model.Epic;
+import com.yandex.app.model.Subtask;
+import com.yandex.app.model.Task;
+import com.yandex.app.model.TaskStatus;
+import com.yandex.app.service.TaskManager;
 
 public class Main {
 

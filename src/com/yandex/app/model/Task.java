@@ -1,4 +1,4 @@
-package Task;
+package com.yandex.app.model;
 
 import java.util.Objects;
 

@@ -1,7 +1,9 @@
-import Task.Task;
-import Task.Subtask;
-import Task.Epic;
-import Task.TaskStatus;
+package com.yandex.app.service;
+
+import com.yandex.app.model.Task;
+import com.yandex.app.model.Subtask;
+import com.yandex.app.model.Epic;
+import com.yandex.app.model.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,23 +23,28 @@ public class TaskManager {
         tasks.put(task.getId(), task);
     }
 
-    public HashMap<Integer, Task> getTasks() {
-        return tasks;
+    public ArrayList <Task> getTasks() {
+
+        return new ArrayList<>(tasks.values());
     }
 
     public Task getTaskById(int id) {
+
         return tasks.get(id);
     }
 
     public void updateTask(Task task) {
+
         tasks.put(task.getId(), task);
     }
 
     public void deleteTaskById(int id) {
+
         tasks.remove(id);
     }
 
     public void deleteAllTasks() {
+
         tasks.clear();
     }
 
@@ -52,11 +59,13 @@ public class TaskManager {
         }
     }
 
-    public HashMap<Integer, Subtask> getSubtasks() {
-        return subtasks;
+    public ArrayList<Subtask> getSubtasks() {
+
+        return new ArrayList<>(subtasks.values());
     }
 
     public Subtask getSubtaskById(int id) {
+
         return subtasks.get(id);
     }
 
@@ -95,17 +104,23 @@ public class TaskManager {
         epics.put(epic.getId(), epic);
     }
 
-    public HashMap<Integer, Epic> getEpics() {
-        return epics;
+    public ArrayList<Epic> getEpics() {
+
+        return new ArrayList<>(epics.values());
     }
 
     public Epic getEpicById(int id) {
+
         return epics.get(id);
     }
 
     public void updateEpic(Epic epic) {
-        epics.put(epic.getId(), epic);
-        updateEpicStatus(epic);
+     Epic existingEpic = getEpicById(epic.getId());
+     if (existingEpic != null) {
+         existingEpic.setTitle(epic.getTitle());
+         existingEpic.setDescription(epic.getDescription());
+         updateEpicStatus(epic);
+     }
     }
 
 
