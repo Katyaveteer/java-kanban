@@ -14,8 +14,9 @@ public class Task {
         this.description = description;
         this.status = status;
     }
-    public Task(String title,String description) {
-        this.title=title;
+
+    public Task(String title, String description) {
+        this.title = title;
         this.description = description;
     }
 

@@ -19,7 +19,7 @@ class InMemoryTaskManagerTest {
         // Создаем задачи всех типов
         int taskId = manager.createTask(new Task(1, "Title", "Description", NEW));
         int epicId = manager.createEpic(new Epic(2, "Title", "Description", NEW));
-        int subtaskId = manager.createSubtask(new Subtask(3, "Sub 2", "Desc 2", DONE,epicId));
+        int subtaskId = manager.createSubtask(new Subtask(3, "Sub 2", "Desc 2", DONE, epicId));
 
         // Проверяем поиск
         assertNotNull(manager.getTaskById(taskId));
