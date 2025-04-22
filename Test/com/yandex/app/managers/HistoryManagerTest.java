@@ -21,7 +21,7 @@ class HistoryManagerTest {
         original.setTitle("Modified");
         original.setStatus(DONE);
 
-        Task fromHistory = history.getHistory().get(0);
+        Task fromHistory = history.getHistory().getFirst();
 
 
         assertEquals("Original", fromHistory.getTitle());
