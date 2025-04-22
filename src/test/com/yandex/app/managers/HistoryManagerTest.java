@@ -1,12 +1,15 @@
 package test.com.yandex.app.managers;
 
+import com.yandex.app.managers.HistoryManager;
 import com.yandex.app.model.Task;
 import com.yandex.app.utils.Managers;
 import org.junit.jupiter.api.Test;
 
+
 import static com.yandex.app.model.TaskStatus.DONE;
 import static com.yandex.app.model.TaskStatus.NEW;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.testng.AssertJUnit.assertEquals;
 
 class HistoryManagerTest {
 
