@@ -1,5 +1,7 @@
-package test.com.yandex.app.managers;
+package test.managers;
 
+import com.yandex.app.managers.HistoryManager;
+import com.yandex.app.managers.InMemoryHistoryManager;
 import com.yandex.app.model.Task;
 
 import java.util.List;

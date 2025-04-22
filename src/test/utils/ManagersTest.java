@@ -1,9 +1,10 @@
-package test.com.yandex.app.utils;
+package test.utils;
 
 import com.yandex.app.managers.HistoryManager;
 import com.yandex.app.managers.TaskManager;
 import com.yandex.app.model.Task;
 import com.yandex.app.utils.Managers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static com.yandex.app.model.TaskStatus.NEW;
@@ -31,25 +32,5 @@ class ManagersTest {
         assertEquals(1, history.getHistory().size());
     }
 
-    static class ManagersTest {
-        @Test
-        void getDefaultShouldReturnInitializedTaskManager() {
-            TaskManager manager = Managers.getDefault();
-            Assertions.assertNotNull(manager);
 
-            // Проверяем базовую функциональность
-            int taskId = manager.createTask(new Task(1, "Title", "Description", NEW));
-            Assertions.assertNotNull(manager.getTaskById(taskId));
-        }
-
-        @Test
-        void getDefaultHistoryShouldReturnWorkingHistoryManager() {
-            HistoryManager history = Managers.getDefaultHistory();
-            Assertions.assertNotNull(history);
-
-            history.add(new Task(1, "Title", "Description", NEW));
-            Assertions.assertEquals(1, history.getHistory().size());
-        }
-
-    }
 }

@@ -1,5 +1,7 @@
-package test.com.yandex.app.model;
+package test.model;
 
+import com.yandex.app.model.Subtask;
+import com.yandex.app.model.Task;
 import org.junit.jupiter.api.Test;
 
 import static com.yandex.app.model.TaskStatus.DONE;
