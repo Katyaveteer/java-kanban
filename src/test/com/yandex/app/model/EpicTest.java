@@ -1,4 +1,4 @@
-package com.yandex.app.model;
+package test.com.yandex.app.model;
 
 import com.yandex.app.managers.TaskManager;
 
