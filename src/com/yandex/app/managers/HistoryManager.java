@@ -2,7 +2,6 @@ package com.yandex.app.managers;
 
 import com.yandex.app.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface HistoryManager {
