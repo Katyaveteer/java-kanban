@@ -2,46 +2,49 @@ package com.yandex.app.managers;
 
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
-import com.yandex.app.model.Task;
 import com.yandex.app.utils.Managers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static com.yandex.app.model.TaskStatus.DONE;
-import static com.yandex.app.model.TaskStatus.NEW;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
 
-    private final TaskManager manager = Managers.getDefault();
+    private TaskManager manager;
+    private Epic epic;
 
-    @Test
-    void shouldAddAndFindDifferentTaskTypes() {
-        // Создаем задачи всех типов
-        int taskId = manager.createTask(new Task(1, "Title", "Description", NEW));
-        int epicId = manager.createEpic(new Epic(2, "Title", "Description", NEW));
-        int subtaskId = manager.createSubtask(new Subtask(3, "Sub 2", "Desc 2", DONE, epicId));
+    @BeforeEach
+    void setUp() {
+        manager = Managers.getDefault();
+        epic = new Epic("Test Epic", "Description");
+        int epicId = manager.createEpic(epic);
 
-        // Проверяем поиск
-        assertNotNull(manager.getTaskById(taskId));
-        assertNotNull(manager.getEpicById(epicId));
-        assertNotNull(manager.getSubtaskById(subtaskId));
+        manager.createSubtask(new Subtask("Subtask 1", "Desc", epicId));
+        manager.createSubtask(new Subtask("Subtask 2", "Desc", epicId));
     }
 
     @Test
-    void shouldHandleManualAndGeneratedIds() {
-        // Задача с заданным ID
-        Task taskWithId = new Task(1, "Manual ID", "Desc", NEW);
-        manager.createTask(taskWithId);
+    void shouldRemoveSubtasksFromEpicWhenDeleted() {
+        List<Subtask> subtasks = manager.getSubtasksByEpicId(epic.getId());
+        int subtaskId = subtasks.getFirst().getId();
 
-        // Задача с автоматическим ID
-        Task autoTask = new Task("Auto ID", "Desc");
-        int autoId = manager.createTask(autoTask);
+        manager.deleteSubtaskById(subtaskId);
 
-        // Проверяем, что обе задачи доступны
-        assertEquals(1, taskWithId.getId());
-        assertNotEquals(1, autoId);
-        assertNotNull(manager.getTaskById(1));
-        assertNotNull(manager.getTaskById(autoId));
+        Epic updatedEpic = manager.getEpicById(epic.getId());
+        assertFalse(updatedEpic.getSubtaskIds().contains(subtaskId));
     }
 
+    @Test
+    void shouldRemoveEpicAndSubtasksFromHistory() {
+        int subtaskId = manager.getSubtasksByEpicId(epic.getId()).getFirst().getId();
+
+        // Добавляем в историю
+        manager.getTaskById(epic.getId());
+        manager.getSubtaskById(subtaskId);
+
+        // Удаляем эпик
+        manager.deleteEpicById(epic.getId());
+
+        assertTrue(manager.getHistory().isEmpty());
+    }
 }
