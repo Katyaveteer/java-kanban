@@ -1,9 +1,13 @@
 package com.yandex.app.managers;
 
 import com.yandex.app.model.Task;
+
 import java.util.List;
+
 import static com.yandex.app.model.TaskStatus.*;
+
 import org.junit.jupiter.api.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
