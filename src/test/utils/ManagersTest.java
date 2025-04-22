@@ -1,14 +1,13 @@
-package test.utils;
+package utils;
 
 import com.yandex.app.managers.HistoryManager;
 import com.yandex.app.managers.TaskManager;
 import com.yandex.app.model.Task;
 import com.yandex.app.utils.Managers;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.Test;
 
 import static com.yandex.app.model.TaskStatus.NEW;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

@@ -1,4 +1,4 @@
-package test.managers;
+package managers;
 
 import com.yandex.app.managers.TaskManager;
 import com.yandex.app.model.Epic;
