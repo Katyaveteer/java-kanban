@@ -4,7 +4,6 @@ import com.yandex.app.managers.FileBackedTaskManager;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
-import com.yandex.app.managers.TaskManager;
 import com.yandex.app.model.TaskStatus;
 
 import java.io.File;
