@@ -10,6 +10,10 @@ public class Epic extends Task {
         super(id, title, description, status);
         this.subtaskIds = new ArrayList<>();
     }
+    public Epic(String title, String description, TaskStatus status) {
+        super(title, description, status);
+        this.subtaskIds = new ArrayList<>();
+    }
 
     public Epic(String title, String description) {
         super(title, description);
@@ -31,4 +35,9 @@ public class Epic extends Task {
 
         subtaskIds.remove(Integer.valueOf(subtaskId));
     }
+    @Override
+    public TaskType getType() {
+        return TaskType.EPIC;
+    }
+
 }
