@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
-
 class SubtaskTest {
     @Test
     void differentSubtaskTypesWithSameIdShouldBeEqual() {

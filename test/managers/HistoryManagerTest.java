@@ -11,7 +11,6 @@ import static com.yandex.app.model.TaskStatus.DONE;
 import static com.yandex.app.model.TaskStatus.NEW;
 
 
-
 class HistoryManagerTest {
 
     private final HistoryManager history = Managers.getDefaultHistory();

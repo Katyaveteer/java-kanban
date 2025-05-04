@@ -14,6 +14,7 @@ public class Task {
         this.description = description;
         this.status = status;
     }
+
     public Task(String title, String description, TaskStatus status) {
 
         this.title = title;
@@ -96,6 +97,7 @@ public class Task {
                 ", status=" + status +
                 '}';
     }
+
     public TaskType getType() {
         return TaskType.TASK;
     }

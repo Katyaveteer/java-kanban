@@ -16,20 +16,20 @@ public class Main {
 
         // Создаем задачи
         Task task1 = new Task("Задача 1", "Описание", TaskStatus.NEW);
-        Task task2 = new Task("Задача 2", "Описание",TaskStatus.NEW);
+        Task task2 = new Task("Задача 2", "Описание", TaskStatus.NEW);
         int task1Id = manager.createTask(task1);
         int task2Id = manager.createTask(task2);
 
         // Создаем эпики
-        Epic epic1 = new Epic("Эпик 1", "Описание",TaskStatus.NEW);
-        Epic epic2 = new Epic("Эпик 2", "Описание",TaskStatus.NEW);
+        Epic epic1 = new Epic("Эпик 1", "Описание", TaskStatus.NEW);
+        Epic epic2 = new Epic("Эпик 2", "Описание", TaskStatus.NEW);
         int epic1Id = manager.createEpic(epic1);
         int epic2Id = manager.createEpic(epic2);
 
         // Создаем подзадачи
-        Subtask subtask1 = new Subtask("Подзадача 1", "Описание",TaskStatus.NEW ,epic1Id);
-        Subtask subtask2 = new Subtask("Подзадача 2", "Описание",TaskStatus.NEW,epic1Id);
-        Subtask subtask3 = new Subtask("Подзадача 3", "Описание",TaskStatus.NEW,epic1Id);
+        Subtask subtask1 = new Subtask("Подзадача 1", "Описание", TaskStatus.NEW, epic1Id);
+        Subtask subtask2 = new Subtask("Подзадача 2", "Описание", TaskStatus.NEW, epic1Id);
+        Subtask subtask3 = new Subtask("Подзадача 3", "Описание", TaskStatus.NEW, epic1Id);
         int subtask1Id = manager.createSubtask(subtask1);
         int subtask2Id = manager.createSubtask(subtask2);
         int subtask3Id = manager.createSubtask(subtask3);
