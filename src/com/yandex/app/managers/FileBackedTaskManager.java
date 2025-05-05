@@ -45,9 +45,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Subtask getSubtaskById(int id) {
-      Subtask subtask = super.getSubtaskById(id);
-      save();
-      return  subtask;
+        Subtask subtask = super.getSubtaskById(id);
+        save();
+        return subtask;
     }
 
 
@@ -66,7 +66,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Epic getEpicById(int id) {
-      Epic epic = super.getEpicById(id);
+        Epic epic = super.getEpicById(id);
         save();
         return epic;
     }
@@ -117,7 +117,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
-
     public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("id,type,name,status,description,epic\n");
@@ -139,7 +138,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             List<Task> history = historyManager.getHistory();
             StringBuilder historyLine = new StringBuilder();
 
-            for(int i = 0; i < history.size(); i++) {
+            for (int i = 0; i < history.size(); i++) {
                 historyLine.append(history.get(i).getId());
                 if (i < history.size() - 1) {
                     historyLine.append(",");
@@ -162,7 +161,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         sb.append(task.getStatus()).append(",");
         sb.append(task.getDescription()).append(",");
 
-        if (task.getType() == TaskType.SUBTASK)  {
+        if (task.getType() == TaskType.SUBTASK) {
             sb.append(((Subtask) task).getEpicId());
         } else {
             sb.append("");
@@ -231,7 +230,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             String historyLine = reader.readLine();
 
-            if(historyLine != null &&!historyLine.isEmpty()) {
+            if (historyLine != null && !historyLine.isEmpty()) {
                 String[] idHistory = historyLine.split(",");
                 for (String idStr : idHistory) {
                     int id = Integer.parseInt(idStr);
@@ -245,7 +244,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
                 }
             }
-
 
 
         } catch (IOException e) {
