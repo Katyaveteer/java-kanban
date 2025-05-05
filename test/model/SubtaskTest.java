@@ -1,5 +1,7 @@
-package com.yandex.app.model;
+package model;
 
+import com.yandex.app.model.Subtask;
+import com.yandex.app.model.Task;
 import org.junit.jupiter.api.Test;
 
 import static com.yandex.app.model.TaskStatus.DONE;
@@ -7,7 +9,6 @@ import static com.yandex.app.model.TaskStatus.NEW;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-;
 
 class SubtaskTest {
     @Test

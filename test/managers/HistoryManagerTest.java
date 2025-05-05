@@ -1,12 +1,15 @@
-package com.yandex.app.managers;
+package managers;
 
+import com.yandex.app.managers.HistoryManager;
 import com.yandex.app.model.Task;
 import com.yandex.app.utils.Managers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 
 import static com.yandex.app.model.TaskStatus.DONE;
 import static com.yandex.app.model.TaskStatus.NEW;
-import static org.junit.jupiter.api.Assertions.*;
+
 
 class HistoryManagerTest {
 
@@ -21,11 +24,11 @@ class HistoryManagerTest {
         original.setTitle("Modified");
         original.setStatus(DONE);
 
-        Task fromHistory = history.getHistory().get(0);
+        Task fromHistory = history.getHistory().getFirst();
 
 
-        assertEquals("Original", fromHistory.getTitle());
-        assertEquals(NEW, fromHistory.getStatus());
+        Assertions.assertEquals("Original", fromHistory.getTitle());
+        Assertions.assertEquals(NEW, fromHistory.getStatus());
     }
 
 }

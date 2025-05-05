@@ -1,6 +1,7 @@
-package com.yandex.app.model;
+package model;
 
 import com.yandex.app.managers.TaskManager;
+import com.yandex.app.model.Task;
 import com.yandex.app.utils.Managers;
 import org.junit.jupiter.api.Test;
 
