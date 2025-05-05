@@ -1,9 +1,6 @@
 package com.yandex.app.managers;
 
-import com.yandex.app.model.Epic;
-import com.yandex.app.model.Subtask;
-import com.yandex.app.model.Task;
-import com.yandex.app.model.TaskStatus;
+import com.yandex.app.model.*;
 
 import java.io.*;
 import java.util.List;
@@ -32,6 +29,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return task;
     }
 
+
     @Override
     public void updateTask(Task task) {
         super.updateTask(task);
@@ -47,10 +45,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Subtask getSubtaskById(int id) {
-        Subtask subtask = super.getSubtaskById(id);
-        save();
-        return subtask;
+      Subtask subtask = super.getSubtaskById(id);
+      save();
+      return  subtask;
     }
+
 
     @Override
     public void updateSubtask(Subtask subtask) {
@@ -67,10 +66,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Epic getEpicById(int id) {
-        Epic epic = super.getEpicById(id);
+      Epic epic = super.getEpicById(id);
         save();
         return epic;
     }
+
 
     @Override
     public void updateEpic(Epic epic) {
@@ -116,12 +116,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    @Override
-    public List<Subtask> getSubtasksByEpicId(int epicId) {
-        List<Subtask> subtasks = super.getSubtasksByEpicId(epicId);
-        save();
-        return subtasks;
-    }
 
 
     public void save() {
@@ -141,6 +135,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
 
             writer.newLine();
+
+            List<Task> history = historyManager.getHistory();
+            StringBuilder historyLine = new StringBuilder();
+
+            for(int i = 0; i < history.size(); i++) {
+                historyLine.append(history.get(i).getId());
+                if (i < history.size() - 1) {
+                    historyLine.append(",");
+                }
+            }
+            if (!historyLine.isEmpty()) {
+                writer.write(historyLine.toString());
+            }
+
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка при загрузке из файла: " + file.getName(), e);
         }
@@ -154,7 +162,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         sb.append(task.getStatus()).append(",");
         sb.append(task.getDescription()).append(",");
 
-        if (task instanceof Subtask) {
+        if (task.getType() == TaskType.SUBTASK)  {
             sb.append(((Subtask) task).getEpicId());
         } else {
             sb.append("");
@@ -221,9 +229,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             }
 
+            String historyLine = reader.readLine();
+
+            if(historyLine != null &&!historyLine.isEmpty()) {
+                String[] idHistory = historyLine.split(",");
+                for (String idStr : idHistory) {
+                    int id = Integer.parseInt(idStr);
+                    if (manager.tasks.containsKey(id)) {
+                        manager.historyManager.add(manager.tasks.get(id));
+                    } else if (manager.epics.containsKey(id)) {
+                        manager.historyManager.add(manager.epics.get(id));
+                    } else if (manager.subtasks.containsKey(id)) {
+                        manager.historyManager.add(manager.subtasks.get(id));
+
+                    }
+                }
+            }
+
+
 
         } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка при загрузке из файла: " + file.getName(), e);
+            throw new ManagerSaveException("Ошибка при чтении из файла: " + file.getName(), e);
         }
 
         return manager;
