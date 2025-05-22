@@ -17,7 +17,7 @@ class HistoryManagerTest {
 
     @Test
     void shouldPreserveTaskDataInHistory() {
-        Task original = new Task(1, "Original", "Desc", NEW);
+        Task original = new Task("Original", "Desc", NEW);
         history.add(original);
 
 

@@ -2,8 +2,13 @@ package model;
 
 import com.yandex.app.managers.TaskManager;
 import com.yandex.app.model.Task;
+import com.yandex.app.model.TaskStatus;
 import com.yandex.app.utils.Managers;
 import org.junit.jupiter.api.Test;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static com.yandex.app.model.TaskStatus.IN_PROGRESS;
 import static com.yandex.app.model.TaskStatus.NEW;
@@ -21,16 +26,25 @@ class TaskTest {
     @Test
     void taskShouldRemainUnchangedWhenAddedToManager() {
         TaskManager manager = Managers.getDefault();
-        Task original = new Task(1, "Original", "Desc", NEW);
+        Task original = new Task("Original", "Desc", NEW);
 
         int taskId = manager.createTask(original);
-        Task fromManager = manager.getTaskById(taskId);
+        Optional<Task> fromManager = manager.getTaskById(taskId);
+        assertTrue(fromManager.isPresent());
+        assertEquals(taskId, fromManager.get().getId());
+        assertEquals(original.getTitle(), fromManager.get().getTitle());
+        assertEquals(original.getDescription(), fromManager.get().getDescription());
+        assertEquals(original.getStatus(), fromManager.get().getStatus());
 
-        // Проверяем все поля
-        assertEquals(original.getId(), fromManager.getId());
-        assertEquals(original.getTitle(), fromManager.getTitle());
-        assertEquals(original.getDescription(), fromManager.getDescription());
-        assertEquals(original.getStatus(), fromManager.getStatus());
+    }
+
+    @Test
+    void shouldCalculateEndTime() {
+        LocalDateTime startTime = LocalDateTime.now();
+        Duration duration = Duration.ofHours(2);
+        Task task = new Task(1, "Title", "Desc", TaskStatus.NEW, duration, startTime);
+
+        assertEquals(startTime.plus(duration), task.getEndTime());
     }
 }
 

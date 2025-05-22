@@ -3,7 +3,12 @@ package com.yandex.app.managers;
 import com.yandex.app.model.*;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -15,45 +20,89 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.file = file;
     }
 
+
     @Override
     public int createTask(Task task) {
+        if (hasTimeIntersection(task)) {
+            throw new IllegalArgumentException("Задача пересекается по времени с другой.");
+        }
         int id = super.createTask(task);
+        if (task.getStartTime() != null) prioritizedTasks.add(task);
         save();
         return id;
     }
 
+
     @Override
-    public Task getTaskById(int id) {
-        Task task = super.getTaskById(id);
+    public Optional<Task> getTaskById(int id) {
+        Optional<Task> opt = super.getTaskById(id);
         save();
-        return task;
+        return opt;
     }
 
 
     @Override
     public void updateTask(Task task) {
+        Task oldTask = tasks.get(task.getId());
+        if (oldTask != null && oldTask.getStartTime() != null) {
+            prioritizedTasks.remove(oldTask);
+        }
+
+        if (hasTimeIntersection(task)) {
+            if (oldTask != null && oldTask.getStartTime() != null) {
+                prioritizedTasks.add(oldTask); // возвращаем, если новая некорректна
+            }
+            throw new IllegalArgumentException("Ошибка: задача пересекается с другой по времени.");
+        }
+
         super.updateTask(task);
+        if (task.getStartTime() != null) {
+            prioritizedTasks.add(task);
+        }
         save();
     }
 
     @Override
     public int createSubtask(Subtask subtask) {
+        if (hasTimeIntersection(subtask)) {
+            throw new IllegalArgumentException("Ошибка: подзадача пересекается с другой по времени.");
+        }
+
         int id = super.createSubtask(subtask);
+        if (subtask.getStartTime() != null) {
+            prioritizedTasks.add(subtask);
+        }
+
         save();
         return id;
     }
 
     @Override
-    public Subtask getSubtaskById(int id) {
-        Subtask subtask = super.getSubtaskById(id);
+    public Optional<Subtask> getSubtaskById(int id) {
+        Optional<Subtask> opt = super.getSubtaskById(id);
         save();
-        return subtask;
+        return opt;
     }
 
 
     @Override
     public void updateSubtask(Subtask subtask) {
+        Subtask oldSubtask = subtasks.get(subtask.getId());
+        if (oldSubtask != null && oldSubtask.getStartTime() != null) {
+            prioritizedTasks.remove(oldSubtask);
+        }
+
+        if (hasTimeIntersection(subtask)) {
+            if (oldSubtask != null && oldSubtask.getStartTime() != null) {
+                prioritizedTasks.add(oldSubtask);
+            }
+            throw new IllegalArgumentException("Ошибка: подзадача пересекается с другой по времени.");
+        }
+
         super.updateSubtask(subtask);
+        if (subtask.getStartTime() != null) {
+            prioritizedTasks.add(subtask);
+        }
         save();
     }
 
@@ -65,10 +114,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Epic getEpicById(int id) {
-        Epic epic = super.getEpicById(id);
+    public Optional<Epic> getEpicById(int id) {
+        Optional<Epic> opt = super.getEpicById(id);
         save();
-        return epic;
+        return opt;
     }
 
 
@@ -80,6 +129,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public void deleteTaskById(int id) {
+        Task task = tasks.get(id);
+        if (task != null && task.getStartTime() != null) prioritizedTasks.remove(task);
         super.deleteTaskById(id);
         save();
     }
@@ -93,6 +144,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public void deleteSubtaskById(int id) {
+        Subtask subtask = subtasks.get(id);
+        if (subtask != null && subtask.getStartTime() != null) prioritizedTasks.remove(subtask);
         super.deleteSubtaskById(id);
         save();
     }
@@ -119,7 +172,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write("id,type,name,status,description,epic,duration,startTime\n");
+
             for (Task task : getTasks()) {
                 writer.write(toString(task));
                 writer.newLine();
@@ -161,38 +215,75 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         sb.append(task.getStatus()).append(",");
         sb.append(task.getDescription()).append(",");
 
+
         if (task.getType() == TaskType.SUBTASK) {
             sb.append(((Subtask) task).getEpicId());
-        } else {
-            sb.append("");
         }
+        sb.append(",");
+
+        if (task.getType() != TaskType.EPIC) {
+            // duration
+            Duration duration = task.getDuration();
+            if (duration != null) {
+                sb.append(duration.toMinutes());
+            }
+            sb.append(",");
+
+            // startTime
+            LocalDateTime startTime = task.getStartTime();
+            if (startTime != null) {
+                sb.append(startTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            }
+        }
+
         return sb.toString();
     }
 
+
     private Task fromString(String line) {
-        String[] parts = line.split(",");
+        String[] parts = line.split(",", -1); //
 
         int id = Integer.parseInt(parts[0]);
         String type = parts[1];
         String name = parts[2];
         TaskStatus status = TaskStatus.valueOf(parts[3]);
         String description = parts[4];
+        String epicIdStr = parts.length > 5 ? parts[5] : "";
+        String durationStr = parts.length > 6 ? parts[6] : "";
+        String startTimeStr = parts.length > 7 ? parts[7] : "";
 
+        Duration duration = null;
+        if (!durationStr.isBlank()) {
+            try {
+                duration = Duration.ofMinutes(Long.parseLong(durationStr));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Некорректная продолжительность: " + durationStr, e);
+            }
+        }
+
+        LocalDateTime startTime = null;
+        if (!startTimeStr.isBlank()) {
+            try {
+                startTime = LocalDateTime.parse(startTimeStr);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Некорректное время начала: " + startTimeStr, e);
+            }
+        }
 
         switch (type) {
             case "TASK":
-
-                return new Task(id, name, description, status);
+                return new Task(id, name, description, status, duration, startTime);
             case "EPIC":
-
                 return new Epic(id, name, description, status);
             case "SUBTASK":
-                int epicId = Integer.parseInt(parts[5]);
-                return new Subtask(id, name, description, status, epicId);
+                int epicId = Integer.parseInt(epicIdStr);
+                return new Subtask(id, name, description, epicId, status, duration, startTime);
             default:
                 throw new IllegalArgumentException("Неизвестный тип задачи: " + type);
         }
+
     }
+
 
     public static FileBackedTaskManager loadFromFile(File file) {
 
@@ -222,6 +313,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         }
                         break;
                 }
+                if (task.getType() != TaskType.EPIC && task.getStartTime() != null) {
+                    manager.prioritizedTasks.add(task);
+                }
+
                 if (task.getId() >= manager.nextId) {
                     manager.nextId = task.getId() + 1;
                 }

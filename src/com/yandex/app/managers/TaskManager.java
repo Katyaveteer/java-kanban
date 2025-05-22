@@ -6,13 +6,17 @@ import com.yandex.app.model.Task;
 
 
 import java.util.List;
+import java.util.Optional;
+
 
 public interface TaskManager {
+
+    // Методы для задач
     int createTask(Task task);
 
     List<Task> getTasks();
 
-    Task getTaskById(int id);
+    Optional<Task> getTaskById(int id);
 
     void updateTask(Task task);
 
@@ -25,7 +29,7 @@ public interface TaskManager {
 
     List<Subtask> getSubtasks();
 
-    Subtask getSubtaskById(int id);
+    Optional<Subtask> getSubtaskById(int id);
 
     void updateSubtask(Subtask subtask);
 
@@ -38,7 +42,7 @@ public interface TaskManager {
 
     List<Epic> getEpics();
 
-    Epic getEpicById(int id);
+    Optional<Epic> getEpicById(int id);
 
     void updateEpic(Epic epic);
 
@@ -46,10 +50,13 @@ public interface TaskManager {
 
     void deleteAllEpics();
 
+
     // Дополнительные методы
     List<Subtask> getSubtasksByEpicId(int epicId);
 
     List<Task> getHistory();
+
+    List<Task> getPrioritizedTasks();
 
 
 }
