@@ -10,14 +10,14 @@ public class Epic extends Task {
     private LocalDateTime endTime;
 
 
-    public Epic(int id, String title, String description, TaskStatus status) {
-        super(id, title, description, status);
-        this.subtaskIds = new ArrayList<>();
-
-    }
 
     public Epic(String title, String description) {
         super(title, description);
+        this.subtaskIds = new ArrayList<>();
+    }
+
+    public Epic(int id, String title, String description, TaskStatus status) {
+        super(id, title, description, status);
         this.subtaskIds = new ArrayList<>();
     }
 
@@ -46,7 +46,7 @@ public class Epic extends Task {
     public LocalDateTime getEndTime() {
 
         if (subtaskIds.isEmpty()) {
-            return null;
+            return LocalDateTime.now().plus(getDuration());
         }
         return endTime;
     }
@@ -67,9 +67,10 @@ public class Epic extends Task {
     @Override
     public LocalDateTime getStartTime() {
         if (subtaskIds.isEmpty()) {
-            return null;
+            return LocalDateTime.now();
         }
         return super.getStartTime();
     }
+
 
 }

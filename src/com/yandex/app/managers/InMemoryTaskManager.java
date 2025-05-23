@@ -236,6 +236,8 @@ public class InMemoryTaskManager implements TaskManager {
     public int createEpic(Epic epic) {
         epic.setId(nextId++);
         epics.put(epic.getId(), epic);
+        updateEpicStatus(epic);
+        updateEpicTime(epic);
         return epic.getId();
     }
 
@@ -342,9 +344,9 @@ public class InMemoryTaskManager implements TaskManager {
     private void updateEpicTime(Epic epic) {
         List<Integer> subtaskIds = epic.getSubtaskIds();
         if (subtaskIds.isEmpty()) {
-            epic.setStartTime(null);
-            epic.setEndTime(null);
-            epic.setDuration(Duration.ZERO);
+            epic.setStartTime(LocalDateTime.now());
+            epic.setEndTime(LocalDateTime.now().plus(epic.getDuration()));
+            epic.getDuration();
             return;
         }
 

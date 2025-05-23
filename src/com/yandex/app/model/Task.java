@@ -94,6 +94,9 @@ public class Task {
     }
 
     public TaskStatus getStatus() {
+        if (status == null) {
+            return TaskStatus.NEW;
+        }
 
         return status;
     }
@@ -133,6 +136,9 @@ public class Task {
     }
 
     public Duration getDuration() {
+        if (duration == null) {
+            return Duration.ZERO;
+        }
         return duration;
     }
 
@@ -141,6 +147,9 @@ public class Task {
     }
 
     public LocalDateTime getStartTime() {
+        if (startTime == null) {
+            return startTime = LocalDateTime.now();
+        }
         return startTime;
     }
 
@@ -149,10 +158,11 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        if (startTime != null && duration != null) {
-            return startTime.plus(duration);
+        if (duration == null) {
+            return startTime;
         }
-        return null;
+        return startTime.plus(duration);
+
     }
 
 

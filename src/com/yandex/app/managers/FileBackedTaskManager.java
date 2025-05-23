@@ -114,6 +114,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
+    public List<Epic> getEpics() {
+        return super.getEpics();
+    }
+
+    @Override
     public Optional<Epic> getEpicById(int id) {
         Optional<Epic> opt = super.getEpicById(id);
         save();
@@ -221,19 +226,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
         sb.append(",");
 
-        if (task.getType() != TaskType.EPIC) {
-            // duration
-            Duration duration = task.getDuration();
-            if (duration != null) {
-                sb.append(duration.toMinutes());
-            }
-            sb.append(",");
+        // duration
+        Duration duration = task.getDuration();
+        if (duration != null) {
+            sb.append(duration.toMinutes());
+        }
+        sb.append(",");
 
-            // startTime
-            LocalDateTime startTime = task.getStartTime();
-            if (startTime != null) {
-                sb.append(startTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-            }
+        // startTime
+        LocalDateTime startTime = task.getStartTime();
+        if (startTime != null) {
+            sb.append(startTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         }
 
         return sb.toString();
@@ -264,7 +267,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         LocalDateTime startTime = null;
         if (!startTimeStr.isBlank()) {
             try {
-                startTime = LocalDateTime.parse(startTimeStr);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
+                startTime = LocalDateTime.parse(startTimeStr, formatter);
             } catch (DateTimeParseException e) {
                 throw new IllegalArgumentException("Некорректное время начала: " + startTimeStr, e);
             }
@@ -310,6 +314,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         Epic epic = manager.epics.get(subtask.getEpicId());
                         if (epic != null) {
                             epic.addSubtaskId(subtask.getId());
+
                         }
                         break;
                 }
@@ -339,7 +344,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
                 }
             }
-
+            for (Epic epic : manager.epics.values()) {
+                manager.updateEpic(epic);
+            }
 
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка при чтении из файла: " + file.getName(), e);

@@ -18,16 +18,18 @@ public class Main {
         // 1) Создаём обычную задачу
         Task task = new Task(
                 "Задача",
-                "Описание задачи",
-                TaskStatus.NEW,
+                "Описание задачи", TaskStatus.NEW,
                 Duration.ofMinutes(90),
-                LocalDateTime.of(2025, 5, 22, 9, 0)
-        );
+                LocalDateTime.of(2025, 5, 23, 10, 0));
         int taskId = manager.createTask(task);
 
         // 2) Создаём эпик (эпики сами по себе не имеют времени)
         Epic epic = new Epic("Эпик", "Описание эпика");
         int epicId = manager.createEpic(epic);
+
+        Epic epic2 = new Epic("Эпик2", "Описание эпика2");
+        int epicId2 = manager.createEpic(epic2);
+
 
         // 3) Создаём подзадачи для этого эпика
         Subtask sub1 = new Subtask(
@@ -83,6 +85,18 @@ public class Main {
         Optional<Epic> optEpic = manager.getEpicById(epicId);
         if (optEpic.isPresent()) {
             Epic e = optEpic.get();
+            System.out.println(e);
+            System.out.println("Длительность эпика: " + e.getDuration().toMinutes() + " мин");
+            System.out.println("Начало эпика:    " + e.getStartTime().format(fmt));
+            System.out.println("Конец   эпика:   " + e.getEndTime().format(fmt));
+        } else {
+            System.out.println("Эпик не найден");
+        }
+
+        System.out.println("\n Эпик");
+        Optional<Epic> optEpic2 = manager.getEpicById(epicId2);
+        if (optEpic2.isPresent()) {
+            Epic e = optEpic2.get();
             System.out.println(e);
             System.out.println("Длительность эпика: " + e.getDuration().toMinutes() + " мин");
             System.out.println("Начало эпика:    " + e.getStartTime().format(fmt));
