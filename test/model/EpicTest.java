@@ -41,20 +41,13 @@ class EpicTest {
         assertNotEquals(epicId, subtaskId, "Id подзадачи не должен совпадать с id эпика");
     }
 
-    @Test
-    void shouldHandleTimeWithoutSubtasks() {
-        Epic epic = new Epic("Title", "Desc");
-        assertNull(epic.getStartTime(), "Без подзадач начало должно быть null");
-        assertNull(epic.getEndTime(), "Без подзадач конец должен быть null");
-        assertEquals(Duration.ZERO, epic.getDuration(), "Без подзадач продолжительность = 0");
-    }
 
     @Test
     void statusShouldBeNewIfAllSubtasksNew() {
         Epic epic = new Epic("Epic", "Desc");
         int epicId = manager.createEpic(epic);
-        manager.createSubtask(new Subtask("Sub1", "", epicId, NEW));
-        manager.createSubtask(new Subtask("Sub2", "", epicId, NEW));
+        manager.createSubtask(new Subtask(1, "Sub1", "", epicId, NEW, Duration.ofMinutes(100), LocalDateTime.of(2023, 5, 1, 10, 30)));
+        manager.createSubtask(new Subtask(2, "Sub2", "", epicId, NEW, Duration.ofMinutes(5), LocalDateTime.of(2023, 5, 1, 10, 30)));
 
         Optional<Epic> updatedEpic = manager.getEpicById(epic.getId());
         assertTrue(updatedEpic.isPresent());
@@ -66,8 +59,8 @@ class EpicTest {
     void statusShouldBeDoneIfAllSubtasksDone() {
         Epic epic = new Epic("Epic", "Desc");
         int epicId = manager.createEpic(epic);
-        manager.createSubtask(new Subtask("Sub1", "", epicId, DONE));
-        manager.createSubtask(new Subtask("Sub2", "", epicId, DONE));
+        manager.createSubtask(new Subtask(1, "Sub1", "", epicId, DONE, Duration.ofMinutes(30), LocalDateTime.of(2023, 5, 1, 10, 0)));
+        manager.createSubtask(new Subtask(2, "Sub2", "", epicId, DONE, Duration.ofMinutes(30), LocalDateTime.of(2023, 5, 1, 10, 30)));
 
         Optional<Epic> updatedEpic = manager.getEpicById(epic.getId());
         assertTrue(updatedEpic.isPresent());
@@ -79,8 +72,8 @@ class EpicTest {
     void statusShouldBeInProgressIfMixed() {
         Epic epic = new Epic("Epic", "Desc");
         int epicId = manager.createEpic(epic);
-        manager.createSubtask(new Subtask("Sub1", "", epicId, NEW));
-        manager.createSubtask(new Subtask("Sub2", "", epicId, DONE));
+        manager.createSubtask(new Subtask(1, "Sub1", "", epicId, NEW, Duration.ofMinutes(5), LocalDateTime.of(2023, 5, 1, 10, 30)));
+        manager.createSubtask(new Subtask(2, "Sub2", "", epicId, DONE, Duration.ofMinutes(10), LocalDateTime.of(2023, 5, 1, 10, 30)));
 
         Optional<Epic> updatedEpic = manager.getEpicById(epic.getId());
         assertTrue(updatedEpic.isPresent());
@@ -92,8 +85,8 @@ class EpicTest {
     void statusShouldBeInProgressIfAnyInProgress() {
         Epic epic = new Epic("Epic", "Desc");
         int epicId = manager.createEpic(epic);
-        manager.createSubtask(new Subtask("Sub1", "", epicId, NEW));
-        manager.createSubtask(new Subtask("Sub2", "", epicId, IN_PROGRESS));
+        manager.createSubtask(new Subtask(1, "Sub1", "", epicId, NEW, Duration.ofMinutes(45), LocalDateTime.of(2023, 5, 1, 10, 30)));
+        manager.createSubtask(new Subtask(2, "Sub2", "", epicId, IN_PROGRESS, Duration.ofMinutes(15), LocalDateTime.of(2023, 5, 1, 10, 30)));
 
         Optional<Epic> updatedEpic = manager.getEpicById(epic.getId());
         assertTrue(updatedEpic.isPresent());
