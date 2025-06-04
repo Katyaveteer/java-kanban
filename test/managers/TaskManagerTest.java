@@ -1,5 +1,6 @@
 package managers;
 
+import com.yandex.app.server.NotFoundException;
 import com.yandex.app.managers.TaskManager;
 import com.yandex.app.model.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void testCreateAndGetTask() {
         int taskId = manager.createTask(task1);
-        Optional<Task> retrieved = manager.getTaskById(taskId);
+        Optional<Task> retrieved = Optional.ofNullable(manager.getTaskById(taskId));
         assertTrue(retrieved.isPresent());
         assertEquals(task1.getTitle(), retrieved.get().getTitle());
         assertEquals(task1.getStatus(), retrieved.get().getStatus());
@@ -44,7 +45,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         int id = manager.createTask(task1);
         Task updatedTask = new Task(id, "Updated Title", "Updated Desc", TaskStatus.DONE, Duration.ofMinutes(30), LocalDateTime.now().plusDays(1));
         manager.updateTask(updatedTask);
-        Optional<Task> retrieved = manager.getTaskById(id);
+        Optional<Task> retrieved = Optional.ofNullable(manager.getTaskById(id));
         assertTrue(retrieved.isPresent());
         assertEquals("Updated Title", retrieved.get().getTitle());
         assertEquals(TaskStatus.DONE, retrieved.get().getStatus());
@@ -55,8 +56,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         int id = manager.createTask(task1);
         manager.deleteTaskById(id);
 
-        Optional<Task> opt = manager.getTaskById(id);
-        assertTrue(opt.isEmpty(), "После удаления задача не должна возвращаться");
+        assertThrows(NotFoundException.class, () -> manager.getTaskById(id),
+                "После удаления задача не должна быть доступна");
     }
 
 
@@ -94,7 +95,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createSubtask(subtask1);
         manager.createSubtask(subtask2);
 
-        Optional<Epic> epic = manager.getEpicById(epicId);
+        Optional<Epic> epic = Optional.ofNullable(manager.getEpicById(epicId));
         assertTrue(epic.isPresent());
         assertEquals(TaskStatus.NEW, epic.get().getStatus());
     }
@@ -110,7 +111,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createSubtask(subtask1);
         manager.createSubtask(subtask2);
 
-        Optional<Epic> epic = manager.getEpicById(epicId);
+        Optional<Epic> epic = Optional.ofNullable(manager.getEpicById(epicId));
         assertTrue(epic.isPresent());
         assertEquals(TaskStatus.DONE, epic.get().getStatus());
     }
@@ -126,7 +127,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createSubtask(subtask1);
         manager.createSubtask(subtask2);
 
-        Optional<Epic> epic = manager.getEpicById(epicId);
+        Optional<Epic> epic = Optional.ofNullable(manager.getEpicById(epicId));
         assertTrue(epic.isPresent());
         assertEquals(TaskStatus.IN_PROGRESS, epic.get().getStatus());
     }
@@ -142,7 +143,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createSubtask(subtask1);
         manager.createSubtask(subtask2);
 
-        Optional<Epic> epic = manager.getEpicById(epicId);
+        Optional<Epic> epic = Optional.ofNullable(manager.getEpicById(epicId));
         assertTrue(epic.isPresent());
         assertEquals(TaskStatus.IN_PROGRESS, epic.get().getStatus());
     }

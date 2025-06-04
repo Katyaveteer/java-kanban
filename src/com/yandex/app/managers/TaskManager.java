@@ -1,12 +1,12 @@
 package com.yandex.app.managers;
 
+import com.yandex.app.server.NotFoundException;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
 
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface TaskManager {
@@ -16,7 +16,7 @@ public interface TaskManager {
 
     List<Task> getTasks();
 
-    Optional<Task> getTaskById(int id);
+    Task getTaskById(int id) throws NotFoundException;
 
     void updateTask(Task task);
 
@@ -29,7 +29,7 @@ public interface TaskManager {
 
     List<Subtask> getSubtasks();
 
-    Optional<Subtask> getSubtaskById(int id);
+    Subtask getSubtaskById(int id) throws NotFoundException;
 
     void updateSubtask(Subtask subtask);
 
@@ -42,7 +42,7 @@ public interface TaskManager {
 
     List<Epic> getEpics();
 
-    Optional<Epic> getEpicById(int id);
+    Epic getEpicById(int id) throws NotFoundException;
 
     void updateEpic(Epic epic);
 

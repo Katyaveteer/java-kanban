@@ -1,5 +1,6 @@
 package com.yandex.app.managers;
 
+import com.yandex.app.server.NotFoundException;
 import com.yandex.app.model.*;
 
 import java.io.*;
@@ -8,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Optional;
 
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -34,8 +34,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
 
     @Override
-    public Optional<Task> getTaskById(int id) {
-        Optional<Task> opt = super.getTaskById(id);
+    public Task getTaskById(int id) throws NotFoundException {
+        Task opt = super.getTaskById(id);
         save();
         return opt;
     }
@@ -78,8 +78,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Optional<Subtask> getSubtaskById(int id) {
-        Optional<Subtask> opt = super.getSubtaskById(id);
+    public Subtask getSubtaskById(int id) throws NotFoundException {
+        Subtask opt = super.getSubtaskById(id);
         save();
         return opt;
     }
@@ -119,8 +119,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Optional<Epic> getEpicById(int id) {
-        Optional<Epic> opt = super.getEpicById(id);
+    public Epic getEpicById(int id) throws NotFoundException {
+        Epic opt = super.getEpicById(id);
         save();
         return opt;
     }

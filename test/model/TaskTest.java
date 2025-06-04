@@ -29,7 +29,7 @@ class TaskTest {
         Task original = new Task("Original", "Desc", NEW);
 
         int taskId = manager.createTask(original);
-        Optional<Task> fromManager = manager.getTaskById(taskId);
+        Optional<Task> fromManager = Optional.ofNullable(manager.getTaskById(taskId));
         assertTrue(fromManager.isPresent());
         assertEquals(taskId, fromManager.get().getId());
         assertEquals(original.getTitle(), fromManager.get().getTitle());

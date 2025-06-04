@@ -1,5 +1,6 @@
 package com.yandex.app.managers;
 
+import com.yandex.app.server.NotFoundException;
 import com.yandex.app.model.Task;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Epic;
@@ -73,13 +74,13 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public Optional<Task> getTaskById(int id) {
+    public Task getTaskById(int id) throws NotFoundException {
         Task task = tasks.get(id);
         if (task != null) {
             historyManager.add(task);
-            return Optional.of(task);
+            return task;
         }
-        return Optional.empty();
+        throw new NotFoundException("Задача с ID " + id + " не найдена");
     }
 
     @Override
@@ -155,13 +156,13 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public Optional<Subtask> getSubtaskById(int id) {
+    public Subtask getSubtaskById(int id) throws NotFoundException {
         Subtask sub = subtasks.get(id);
         if (sub != null) {
             historyManager.add(sub);
-            return Optional.of(sub);
+            return sub;
         }
-        return Optional.empty();
+        throw new NotFoundException("Подзадача с ID " + id + " не найдена");
     }
 
     @Override
@@ -248,22 +249,22 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Optional<Epic> getEpicById(int id) {
+    public Epic getEpicById(int id) throws NotFoundException {
         Epic epic = epics.get(id);
         if (epic != null) {
             historyManager.add(epic);
-            return Optional.of(epic);
+            return epic;
         }
-        return Optional.empty();
+        throw new NotFoundException("Эпик с ID " + id + " не найдена");
     }
 
     @Override
     public void updateEpic(Epic epic) {
         if (!epics.containsKey(epic.getId())) return;
-
         epics.put(epic.getId(), epic);
         updateEpicStatus(epic);
         updateEpicTime(epic);
+
     }
 
 

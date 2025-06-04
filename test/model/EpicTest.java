@@ -49,7 +49,7 @@ class EpicTest {
         manager.createSubtask(new Subtask(1, "Sub1", "", epicId, NEW, Duration.ofMinutes(100), LocalDateTime.of(2023, 5, 1, 10, 30)));
         manager.createSubtask(new Subtask(2, "Sub2", "", epicId, NEW, Duration.ofMinutes(5), LocalDateTime.of(2023, 5, 1, 10, 30)));
 
-        Optional<Epic> updatedEpic = manager.getEpicById(epic.getId());
+        Optional<Epic> updatedEpic = Optional.ofNullable(manager.getEpicById(epic.getId()));
         assertTrue(updatedEpic.isPresent());
         assertEquals(NEW, updatedEpic.get().getStatus());
 
@@ -62,7 +62,7 @@ class EpicTest {
         manager.createSubtask(new Subtask(1, "Sub1", "", epicId, DONE, Duration.ofMinutes(30), LocalDateTime.of(2023, 5, 1, 10, 0)));
         manager.createSubtask(new Subtask(2, "Sub2", "", epicId, DONE, Duration.ofMinutes(30), LocalDateTime.of(2023, 5, 1, 10, 30)));
 
-        Optional<Epic> updatedEpic = manager.getEpicById(epic.getId());
+        Optional<Epic> updatedEpic = Optional.ofNullable(manager.getEpicById(epic.getId()));
         assertTrue(updatedEpic.isPresent());
         assertEquals(DONE, updatedEpic.get().getStatus());
 
@@ -75,7 +75,7 @@ class EpicTest {
         manager.createSubtask(new Subtask(1, "Sub1", "", epicId, NEW, Duration.ofMinutes(5), LocalDateTime.of(2023, 5, 1, 10, 30)));
         manager.createSubtask(new Subtask(2, "Sub2", "", epicId, DONE, Duration.ofMinutes(10), LocalDateTime.of(2023, 5, 1, 10, 30)));
 
-        Optional<Epic> updatedEpic = manager.getEpicById(epic.getId());
+        Optional<Epic> updatedEpic = Optional.ofNullable(manager.getEpicById(epic.getId()));
         assertTrue(updatedEpic.isPresent());
         assertEquals(IN_PROGRESS, updatedEpic.get().getStatus());
 
@@ -88,7 +88,7 @@ class EpicTest {
         manager.createSubtask(new Subtask(1, "Sub1", "", epicId, NEW, Duration.ofMinutes(45), LocalDateTime.of(2023, 5, 1, 10, 30)));
         manager.createSubtask(new Subtask(2, "Sub2", "", epicId, IN_PROGRESS, Duration.ofMinutes(15), LocalDateTime.of(2023, 5, 1, 10, 30)));
 
-        Optional<Epic> updatedEpic = manager.getEpicById(epic.getId());
+        Optional<Epic> updatedEpic = Optional.ofNullable(manager.getEpicById(epic.getId()));
         assertTrue(updatedEpic.isPresent());
         assertEquals(IN_PROGRESS, updatedEpic.get().getStatus());
     }
