@@ -1,6 +1,6 @@
 package server;
 
-import com.google.gson.Gson;
+
 import com.yandex.app.managers.InMemoryTaskManager;
 import com.yandex.app.managers.TaskManager;
 import com.yandex.app.server.HttpTaskServer;
@@ -23,7 +23,6 @@ public class HttpTaskManagerPrioritizedTest {
 
     TaskManager manager = new InMemoryTaskManager();
     HttpTaskServer taskServer = new HttpTaskServer(manager);
-
 
 
     @BeforeEach
