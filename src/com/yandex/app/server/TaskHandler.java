@@ -52,11 +52,16 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                     String body = new String(h.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                     Task task = gson.fromJson(body, Task.class);
                     if (task.getId() != 0) {
-                        manager.updateTask(task); // выбросит NotFoundException, если задачи нет
+                        manager.updateTask(task);
+                        h.sendResponseHeaders(201, 0);
                     } else {
                         manager.createTask(task);
+                        String responseJson = gson.toJson(task);
+                        byte[] responseBytes = responseJson.getBytes(StandardCharsets.UTF_8);
+                        h.sendResponseHeaders(201, responseBytes.length);
+                        h.getResponseBody().write(responseBytes);
                     }
-                    h.sendResponseHeaders(201, 0);
+
                     h.close();
                     break;
                 case "DELETE":

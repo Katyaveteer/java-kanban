@@ -60,11 +60,14 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
                     if (epic.getId() != 0) {
                         manager.updateEpic(epic);
+                        h.sendResponseHeaders(201, 0);
                     } else {
                         manager.createEpic(epic);
+                        String responseJson = gson.toJson(epic);
+                        byte[] responseBytes = responseJson.getBytes(StandardCharsets.UTF_8);
+                        h.sendResponseHeaders(201, responseBytes.length);
+                        h.getResponseBody().write(responseBytes);
                     }
-
-                    h.sendResponseHeaders(201, 0);
                     h.close();
                     break;
                 case "DELETE":

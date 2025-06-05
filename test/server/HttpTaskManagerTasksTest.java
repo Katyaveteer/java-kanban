@@ -27,7 +27,7 @@ public class HttpTaskManagerTasksTest {
     // создаём экземпляр InMemoryTaskManager
     TaskManager manager = new InMemoryTaskManager();
     // передаём его в качестве аргумента в конструктор HttpTaskServer
-    HttpTaskServer taskServer = new HttpTaskServer(manager);
+    HttpTaskServer taskServer = new HttpTaskServer(manager, 8080);
     Gson gson = HttpTaskServer.getGson();
 
     public HttpTaskManagerTasksTest() throws IOException {

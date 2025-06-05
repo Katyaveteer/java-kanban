@@ -22,7 +22,7 @@ public class HttpTaskManagerPrioritizedTest {
     }
 
     TaskManager manager = new InMemoryTaskManager();
-    HttpTaskServer taskServer = new HttpTaskServer(manager);
+    HttpTaskServer taskServer = new HttpTaskServer(manager, 8080);
 
 
     @BeforeEach
@@ -46,7 +46,8 @@ public class HttpTaskManagerPrioritizedTest {
         URI url = URI.create("http://localhost:8080/prioritized");
         HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response;
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
         assertEquals("[]", response.body());
     }

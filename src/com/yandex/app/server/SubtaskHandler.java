@@ -54,10 +54,14 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                     Subtask subtask = gson.fromJson(body, Subtask.class);
                     if (subtask.getId() != 0) {
                         manager.updateSubtask(subtask);
+                        h.sendResponseHeaders(201, 0);
                     } else {
                         manager.createSubtask(subtask);
+                        String responseJson = gson.toJson(subtask);
+                        byte[] responseBytes = responseJson.getBytes(StandardCharsets.UTF_8);
+                        h.sendResponseHeaders(201, responseBytes.length);
+                        h.getResponseBody().write(responseBytes);
                     }
-                    h.sendResponseHeaders(201, 0);
                     h.close();
                     break;
                 case "DELETE":

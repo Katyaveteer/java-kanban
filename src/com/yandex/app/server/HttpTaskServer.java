@@ -21,8 +21,8 @@ public class HttpTaskServer {
             .create();
 
 
-    public HttpTaskServer(TaskManager taskManager) throws IOException {
-        server = HttpServer.create(new InetSocketAddress(8080), 0);
+    public HttpTaskServer(TaskManager taskManager, int port) throws IOException {
+        server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/tasks", new TaskHandler(taskManager));
         server.createContext("/subtasks", new SubtaskHandler(taskManager));
         server.createContext("/epics", new EpicHandler(taskManager));
@@ -47,7 +47,7 @@ public class HttpTaskServer {
 
     public static void main(String[] args) throws IOException {
         TaskManager manager = Managers.getDefault();
-        HttpTaskServer server = new HttpTaskServer(manager);
+        HttpTaskServer server = new HttpTaskServer(manager, 8080);
         server.start();
     }
 

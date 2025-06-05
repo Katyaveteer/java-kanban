@@ -25,7 +25,7 @@ public class HttpTaskManagerHistoryTest {
     }
 
     TaskManager manager = new InMemoryTaskManager();
-    HttpTaskServer taskServer = new HttpTaskServer(manager);
+    HttpTaskServer taskServer = new HttpTaskServer(manager, 8080);
     Gson gson = HttpTaskServer.getGson();
 
 

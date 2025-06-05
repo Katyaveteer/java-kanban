@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class HttpTaskManagerSubtasksTest {
 
     TaskManager manager = new InMemoryTaskManager();
-    HttpTaskServer server = new HttpTaskServer(manager);
+    HttpTaskServer server = new HttpTaskServer(manager, 8080);
     Gson gson = HttpTaskServer.getGson();
     HttpClient client = HttpClient.newHttpClient();
 
